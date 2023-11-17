@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const mainContract = 'Registry';
+const mainContract = 'VitalikSecret';
 
 const contractFilenames = fs.readdirSync(path.join(__dirname, '../contracts'));
 const contractNames = contractFilenames.map((filename) => path.basename(filename, '.md'));

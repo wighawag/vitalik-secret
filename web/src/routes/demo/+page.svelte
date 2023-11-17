@@ -82,7 +82,7 @@
 				message: messageToSend,
 			});
 
-			contracts.Registry.write.setMessage([messageToSend, 12]);
+			contracts.VitalikSecret.write.setMessage([messageToSend, 12]);
 		})}
 	class="m-1 btn btn-primary">Say it!</button
 >

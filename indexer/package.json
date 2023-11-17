@@ -1,7 +1,7 @@
 {
   "name": "vitalik-secret-indexer",
   "version": "0.1.0",
-  "description": "vitalik-secret indexer function to generate the state of all the registry messages",
+  "description": "vitalik-secret indexer function to generate the state in-browser",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",

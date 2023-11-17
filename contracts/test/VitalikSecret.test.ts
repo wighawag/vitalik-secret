@@ -15,7 +15,7 @@ async function deployGreetings(prefix: string) {
 	const [deployer, ...otherAccounts] = accounts;
 
 	const hash = await walletClient.deployContract({
-		...artifacts.GreetingsRegistry,
+		...artifacts.VitalikSecret,
 		account: deployer,
 		args: [prefix],
 	} as any); // TODO https://github.com/wagmi-dev/viem/issues/648
@@ -27,7 +27,7 @@ async function deployGreetings(prefix: string) {
 	}
 
 	return {
-		registry: await fetchContract({address: receipt.contractAddress, abi: artifacts.GreetingsRegistry.abi}),
+		puzzle: await fetchContract({address: receipt.contractAddress, abi: artifacts.VitalikSecret.abi}),
 		prefix,
 		otherAccounts,
 		walletClient,
@@ -39,48 +39,28 @@ async function deployGreetingsWithHello() {
 	return deployGreetings('hello');
 }
 
-describe('Registry', function () {
+describe('VitalikSecret', function () {
 	describe('Deployment', function () {
 		it('Should be already deployed', async function () {
 			const {deployments} = await loadAndExecuteDeployments({
 				provider: network.provider as any,
 			});
-			const registry = await fetchContract(
-				deployments['Registry'] as Deployment<typeof artifacts.GreetingsRegistry.abi>,
+			const VitalikSecret = await fetchContract(
+				deployments['VitalikSecret'] as Deployment<typeof artifacts.VitalikSecret.abi>,
 			);
-			const prefix = await registry.read.prefix();
+			const prefix = await VitalikSecret.read.prefix();
 			expect(prefix).to.equal('');
 		});
 
-		it('Should set the right prefix', async function () {
-			const {registry, prefix} = await loadFixture(deployGreetingsWithHello);
-			expect(await registry.read.prefix()).to.equal(prefix);
-		});
-
-		it('specific prefix', async function () {
-			const myPrefix = prefix_str('');
-			const {registry} = await deployGreetings(myPrefix);
-			expect(await registry.read.prefix()).to.equal(myPrefix);
-		});
-
-		it('Should be able to set message', async function () {
-			const {registry, otherAccounts, publicClient} = await loadFixture(deployGreetingsWithHello);
-			const txHash = await registry.write.setMessage(['hello', 1], {
+		it('Should be able to solve puzzel', async function () {
+			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployGreetingsWithHello);
+			const txHash = await puzzle.write.setMessage(['hello', 1], {
 				account: otherAccounts[0],
 			});
 			expect(await publicClient.waitForTransactionReceipt({hash: txHash})).to.includeEvent(
-				registry.abi,
+				puzzle.abi,
 				'MessageChanged',
 			);
-		});
-
-		it('Should not be able to set message for other account', async function () {
-			const {registry, otherAccounts} = await loadFixture(deployGreetingsWithHello);
-			await expect(
-				registry.write.setMessageFor([otherAccounts[1], 'hello', 1], {
-					account: otherAccounts[0],
-				}),
-			).rejects.toThrow('NOT_AUTHORIZED');
 		});
 	});
 });

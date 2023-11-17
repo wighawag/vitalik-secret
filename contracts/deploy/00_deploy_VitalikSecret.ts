@@ -6,16 +6,15 @@ export default execute(
 	context,
 	async ({deployViaProxy, accounts, artifacts}) => {
 		const contract = await deployViaProxy(
-			'Registry',
+			'VitalikSecret',
 			{
 				account: accounts.deployer,
-				artifact: artifacts.GreetingsRegistry,
-				args: [''],
+				artifact: artifacts.VitalikSecret,
 			},
 			{
 				owner: accounts.deployer,
 			},
 		);
 	},
-	{tags: ['Registry', 'Registry_deploy']},
+	{tags: ['VitalikSecret', 'VitalikSecret_deploy']},
 );

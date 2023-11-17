@@ -17,5 +17,5 @@ hero:
       link: /guide/getting-started/
     - theme: alt
       text: Contracts
-      link: /contracts/Registry/
+      link: /contracts/VitalikSecret/
 ---
