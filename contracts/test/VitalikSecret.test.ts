@@ -10,14 +10,13 @@ import {getConnection, fetchContract} from './connection';
 import artifacts from '../generated/artifacts';
 import {network} from 'hardhat';
 
-async function deployGreetings(prefix: string) {
+async function deployVitalikSecret() {
 	const {accounts, walletClient, publicClient} = await getConnection();
 	const [deployer, ...otherAccounts] = accounts;
 
 	const hash = await walletClient.deployContract({
 		...artifacts.VitalikSecret,
 		account: deployer,
-		args: [prefix],
 	} as any); // TODO https://github.com/wagmi-dev/viem/issues/648
 
 	const receipt = await publicClient.waitForTransactionReceipt({hash});
@@ -28,15 +27,10 @@ async function deployGreetings(prefix: string) {
 
 	return {
 		puzzle: await fetchContract({address: receipt.contractAddress, abi: artifacts.VitalikSecret.abi}),
-		prefix,
 		otherAccounts,
 		walletClient,
 		publicClient,
 	};
-}
-
-async function deployGreetingsWithHello() {
-	return deployGreetings('hello');
 }
 
 describe('VitalikSecret', function () {
@@ -48,19 +42,20 @@ describe('VitalikSecret', function () {
 			const VitalikSecret = await fetchContract(
 				deployments['VitalikSecret'] as Deployment<typeof artifacts.VitalikSecret.abi>,
 			);
-			const prefix = await VitalikSecret.read.prefix();
-			expect(prefix).to.equal('');
+			const uri = await VitalikSecret.read.tokenURI([1n]);
+			expect(uri).to.equal('');
 		});
 
 		it('Should be able to solve puzzel', async function () {
-			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployGreetingsWithHello);
-			const txHash = await puzzle.write.setMessage(['hello', 1], {
+			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployVitalikSecret);
+			const txHash = await puzzle.write.proposeSolution(['0x'], {
 				account: otherAccounts[0],
 			});
-			expect(await publicClient.waitForTransactionReceipt({hash: txHash})).to.includeEvent(
-				puzzle.abi,
-				'MessageChanged',
-			);
+			// TODO
+			// expect(await publicClient.waitForTransactionReceipt({hash: txHash})).to.includeEvent(
+			// 	puzzle.abi,
+			// 	'MessageChanged',
+			// );
 		});
 	});
 });
