@@ -1,7 +1,7 @@
 {
-  "name": "jolly-roger-web",
+  "name": "vitalik-secret-web",
   "version": "0.0.1",
-  "description": "Frontend for jolly-roger.",
+  "description": "Frontend for vitalik-secret.",
   "type": "module",
   "private": true,
   "devDependencies": {
@@ -32,8 +32,8 @@
     "@types/lodash-es": "^4.17.11",
     "ethereum-indexer-browser": "^0.6.12",
     "ethereum-tx-observer": "^0.0.3",
-    "jolly-roger-common": "workspace:*",
-    "jolly-roger-indexer": "workspace:*",
+    "vitalik-secret-common": "workspace:*",
+    "vitalik-secret-indexer": "workspace:*",
     "lodash-es": "^4.17.21",
     "named-logs": "^0.2.2",
     "radiate": "^0.0.1",

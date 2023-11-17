@@ -1,5 +1,5 @@
 {
-  "name": "jolly-roger-contracts",
+  "name": "vitalik-secret-contracts",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "eip-1193": "^0.4.7",
     "hardhat": "^2.19.0",
     "hardhat-rocketh": "^0.6.30",
-    "jolly-roger-common": "workspace:*",
+    "vitalik-secret-common": "workspace:*",
     "ldenv": "^0.3.7",
     "prettier": "^3.0.3",
     "prettier-plugin-solidity": "^1.2.0",

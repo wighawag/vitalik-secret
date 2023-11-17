@@ -2,7 +2,7 @@ import {expect, describe, it} from 'vitest';
 import './utils/viem-matchers';
 
 import {loadFixture} from '@nomicfoundation/hardhat-network-helpers';
-import {prefix_str} from 'jolly-roger-common';
+import {prefix_str} from 'vitalik-secret-common';
 import {Deployment, loadAndExecuteDeployments} from 'rocketh';
 
 import {getConnection, fetchContract} from './connection';

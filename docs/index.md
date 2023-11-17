@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "Jolly-Roger"
+  name: "Vitalik-Secret"
   text: "Build and Deploy for Eternity."
-  tagline: "Jolly Roger is a production-ready template for decentralised applications."
+  tagline: "Vitalik Secret is a production-ready template for decentralised applications."
   image:
     src: /icon.svg
     width: 512

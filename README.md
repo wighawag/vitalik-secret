@@ -1,4 +1,4 @@
-# Jolly-Roger
+# Vitalik-Secret
 
 A template to develop decentralised applications
 

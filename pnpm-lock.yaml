@@ -60,7 +60,7 @@ importers:
       hardhat-rocketh:
         specifier: ^0.6.30
         version: 0.6.30(rocketh@0.6.20)
-      jolly-roger-common:
+      vitalik-secret-common:
         specifier: workspace:*
         version: link:../common
       ldenv:
@@ -120,7 +120,7 @@ importers:
       ethereum-indexer-js-processor:
         specifier: ^0.6.15
         version: 0.6.15(typescript@5.2.2)
-      jolly-roger-common:
+      vitalik-secret-common:
         specifier: workspace:*
         version: link:../common
       named-logs:
@@ -157,10 +157,10 @@ importers:
       ethereum-tx-observer:
         specifier: ^0.0.3
         version: 0.0.3
-      jolly-roger-common:
+      vitalik-secret-common:
         specifier: workspace:*
         version: link:../common
-      jolly-roger-indexer:
+      vitalik-secret-indexer:
         specifier: workspace:*
         version: link:../indexer
       lodash-es:
