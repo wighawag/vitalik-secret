@@ -1,0 +1,30 @@
+{
+  "name": "jolly-roger-indexer",
+  "version": "0.1.0",
+  "description": "jolly-roger indexer function to generate the state of all the registry messages",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "ethereum-indexer-js-processor": "^0.6.15",
+    "jolly-roger-common": "workspace:*",
+    "named-logs": "^0.2.2"
+  },
+  "devDependencies": {
+    "ethereum-indexer-server": "^0.6.16",
+    "ldenv": "^0.3.7",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "wait-on": "^7.1.0"
+  },
+  "scripts": {
+    "eis": "eis",
+    "serve": "ldenv eis run -n @@RPC_URL_:MODE,RPC_URL -p ./dist/index.cjs --disable-cache --deployments ../contracts/deployments/@@MODE @@",
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "dev": "echo 'waiting for src/contracts.ts...'; wait-on src/contracts.ts && tsup src/index.ts --dts --format esm,cjs --watch",
+    "format:check": "prettier --check .",
+    "format": "prettier --write ."
+  }
+}
