@@ -2,6 +2,8 @@
 	export let start: number[];
 	export let size: number = 4;
 
+	let BLANK_TILE = 11;
+
 	type TileData = {
 		si: number;
 		i: number;
@@ -35,14 +37,14 @@
 		});
 	}
 
-	let emptyCellPosition = {i: size * size - 1, x: size - 1, y: size - 1};
+	let emptyCellPosition = {i: BLANK_TILE - 1, x: (BLANK_TILE - 1) % size, y: Math.floor((BLANK_TILE - 1) / size)};
 	$: {
 		const newTiles = tiles;
 		for (let i = 0; i < start.length; i++) {
 			const x = i % size;
 			const y = Math.floor(i / size);
-			const shuffledI = start[i] == 0 ? size * size - 1 : start[i] - 1;
-			if (shuffledI == size * size - 1) {
+			const shuffledI = start[i] == 0 ? BLANK_TILE - 1 : start[i] - 1;
+			if (shuffledI == BLANK_TILE - 1) {
 				emptyCellPosition.i = i;
 				emptyCellPosition.x = x;
 				emptyCellPosition.y = y;
