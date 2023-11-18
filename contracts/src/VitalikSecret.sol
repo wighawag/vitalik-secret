@@ -153,42 +153,16 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             // Calculate the starting byte and starting bit within that byte based on the provided offset
             let startByteIndex := div(offset, 8)
             let startBitIndex := mod(offset, 8)
+            let start := add(data, add(startByteIndex, 32))
 
-            // Calculate the number of bits in the value
-            let valueBits := gt(value, 0)
-            for {
-
-            } gt(value, 0) {
-                valueBits := add(valueBits, 1)
-            } {
-                value := shr(1, value)
+            let existing := mload(start)
+            let v2 := 0
+            if gt(startBitIndex, 0) {
+                let v1 := 0
+                v2 := 0
+                mstore(add(data, add(startByteIndex, 32)), v1)
             }
-
-            // // Check if the value fits within the specified range
-            // require(add(startBitIndex, valueBits) <= 8, "Value exceeds available bits");
-
-            // Calculate the mask to set the specified bits in the starting byte
-            let mask := shl(startBitIndex, 1)
-            for {
-
-            } gt(valueBits, 0) {
-                mask := add(mask, shl(1, 1))
-                valueBits := sub(valueBits, 1)
-            } {
-
-            }
-
-            // Load the starting byte
-            let startByte := mload(add(data, add(startByteIndex, 32)))
-
-            // Clear the bits to be set in the starting byte
-            startByte := and(startByte, not(mask))
-
-            // Set the bits with the provided value
-            startByte := or(startByte, shl(startBitIndex, value))
-
-            // Store the modified starting byte back in the data
-            mstore(add(data, add(startByteIndex, 32)), startByte)
+            mstore(add(data, add(startByteIndex, 32)), v2)
         }
     }
 
