@@ -50,14 +50,30 @@
 	*/
 
 	export const puzzle = {
-		async solve() {
-			const moves = solvePuzzleAStar(
-				size,
-				{tiles: start, position: emptyCellPosition.i},
-				{tiles: solution, position: solution.indexOf(0)},
-			);
+		async solve(moves: number[]) {
+			// const moves = solvePuzzleAStar(
+			// 	size,
+			// 	{tiles: start, position: emptyCellPosition.i},
+			// 	{tiles: solution, position: solution.indexOf(0)},
+			// );
 
 			console.log(moves);
+
+			for (const move of moves) {
+				const {x, y, i: position} = emptyCellPosition;
+				let newPosition = position;
+				if (move == 0) {
+					newPosition = y * size + x + 1;
+				} else if (move == 1) {
+					newPosition = (y + 1) * size + x;
+				} else if (move == 2) {
+					newPosition = y * size + x - 1;
+				} else if (move == 3) {
+					newPosition = (y - 1) * size + x;
+				}
+				swap(newPosition, emptyCellPosition.i);
+				await wait(0.02);
+			}
 		},
 	};
 
