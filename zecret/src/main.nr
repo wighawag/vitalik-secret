@@ -27,7 +27,12 @@ fn main(moves: Moves, count_field: pub Field) {
         }
     }
     assert(position == 15, "invalid final");
-    // TODO check board
+    let end = (SIZE * SIZE) - 1;
+    assert(0 == state[end], "invalid board");
+    state.reduce(|a, b| {
+        assert((b == 0) | (a < b), "invalid board");
+        b 
+    });
 }
 
 fn step(state: State, position: Position, movement: Move) -> (Position, State) {
@@ -44,7 +49,6 @@ fn step(state: State, position: Position, movement: Move) -> (Position, State) {
         }
     };
     let new_state = state.map(swap);
-    //std::println(new_state);
     (new_position, new_state)
 }
 
