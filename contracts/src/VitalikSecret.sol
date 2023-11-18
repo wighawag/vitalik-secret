@@ -130,8 +130,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
     function _swap(bytes memory data, uint256 a, uint256 b) internal {
         // transform logical position in buffer byte position:
-        a = (a * 8) / NUM_BITS_PER_CELL;
-        b = (b * 8) / NUM_BITS_PER_CELL;
+        a = a * NUM_BITS_PER_CELL;
+        b = b * NUM_BITS_PER_CELL;
         uint256 aValue = _extractBits(data, a, NUM_BITS_PER_CELL);
         uint256 bValue = _extractBits(data, b, NUM_BITS_PER_CELL);
         console.log(string.concat("a: ", Strings.toString(a), " = ", Strings.toString(aValue)));
