@@ -48,6 +48,9 @@ importers:
       '@nomicfoundation/hardhat-network-helpers':
         specifier: ^1.0.9
         version: 1.0.9(hardhat@2.19.0)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.0
+        version: 5.0.0
       as-soon:
         specifier: ^0.0.4
         version: 0.0.4
@@ -1484,6 +1487,10 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-arm64-msvc': 0.1.1
       '@nomicfoundation/solidity-analyzer-win32-ia32-msvc': 0.1.1
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
+    dev: true
+
+  /@openzeppelin/contracts@5.0.0:
+    resolution: {integrity: sha512-bv2sdS6LKqVVMLI5+zqnNrNU/CA+6z6CmwFXm/MzmOPBRSO5reEJN7z0Gbzvs0/bv/MZZXNklubpwy3v2+azsw==}
     dev: true
 
   /@parcel/watcher@2.1.0:

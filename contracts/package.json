@@ -5,6 +5,7 @@
   "type": "module",
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
+    "@openzeppelin/contracts": "^5.0.0",
     "as-soon": "^0.0.4",
     "eip-1193": "^0.4.7",
     "hardhat": "^2.19.0",

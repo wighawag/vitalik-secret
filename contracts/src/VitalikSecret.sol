@@ -5,6 +5,10 @@ import "solidity-proxy/solc_0.8/EIP1967/Proxied.sol";
 import "solidity-kit/solc_0.8/ERC721/implementations/BasicERC721.sol";
 import "solidity-kit/solc_0.8/ERC721/interfaces/IERC721Metadata.sol";
 
+// DEBUG
+import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 /// @notice a puzzle
 contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     enum Move {
@@ -15,6 +19,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     }
 
     uint256 public constant SIZE = 4;
+    uint256 public constant NUM_BITS_PER_CELL = 4;
     bytes public constant SOLUTION = "0x123456789ABCDEF0";
 
     // TODO immutable but constructor match a pre-agreed block hash
@@ -29,9 +34,41 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
         for (uint256 i = 0; i < moves.length; i++) {
             bool valid;
+            uint256 oldPosition = position; // TODO remove
             (valid, position) = step(state, position, moves[i]);
-            require(valid, "INVALID_MOVE");
+            if (valid) {
+                console.log(
+                    string.concat(
+                        Strings.toString(oldPosition),
+                        " => ",
+                        Strings.toString(position),
+                        " : ",
+                        Strings.toString(uint8(moves[i]))
+                    )
+                );
+            }
+            require(
+                valid,
+                string.concat(
+                    "invalid ",
+                    Strings.toString(oldPosition),
+                    " => ",
+                    Strings.toString(position),
+                    " : ",
+                    Strings.toString(uint8(moves[i]))
+                )
+            );
         }
+
+        bool equal = _areBytesEqual(state, SOLUTION);
+        if (!equal) {
+            console.logBytes(state);
+            console.logBytes(SOLUTION);
+            bool equalRandom = _areBytesEqual(state, RANDOM);
+            console.log(equalRandom ? "isSTILLRANDOM" : "diff");
+            console.logBytes(RANDOM);
+        }
+        require(equal, "NOT EQUAL TO SOLUTION");
     }
 
     function step(
@@ -44,22 +81,26 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         if (move == Move.RIGHT) {
             if (x < SIZE - 1) {
                 valid = true;
-                // newState =
+                newPosition = y * SIZE + x + 1;
+                _swap(currentState, position, newPosition);
             }
         } else if (move == Move.DOWN) {
             if (y < SIZE - 1) {
                 valid = true;
-                // newState =
+                newPosition = (y + 1) * SIZE + x;
+                _swap(currentState, position, newPosition);
             }
         } else if (move == Move.LEFT) {
             if (x > 0) {
                 valid = true;
-                // newState =
+                newPosition = y * SIZE + x - 1;
+                _swap(currentState, position, newPosition);
             }
         } else if (move == Move.UP) {
             if (y > 0) {
                 valid = true;
-                // newState =
+                newPosition = (y - 1) * SIZE + x;
+                _swap(currentState, position, newPosition);
             }
         }
     }
@@ -85,5 +126,85 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
                 v := shr(4, b)
             }
         }
+    }
+
+    function _swap(bytes memory data, uint256 a, uint256 b) internal {
+        // transform logical position in buffer byte position:
+        a = (a * 8) / NUM_BITS_PER_CELL;
+        b = (b * 8) / NUM_BITS_PER_CELL;
+        uint256 aValue = _extractBits(data, a, NUM_BITS_PER_CELL);
+        uint256 bValue = _extractBits(data, b, NUM_BITS_PER_CELL);
+        console.log(string.concat("a: ", Strings.toString(a), " = ", Strings.toString(aValue)));
+        console.log(string.concat("b: ", Strings.toString(b), " = ", Strings.toString(bValue)));
+        _setBits(data, a, bValue);
+        _setBits(data, b, aValue);
+    }
+
+    function _extractBits(bytes memory data, uint256 offset, uint256 n) internal pure returns (uint256 result) {
+        assembly {
+            let startByteIndex := div(offset, 8)
+            let startBitIndex := mod(offset, 8)
+            let shift := sub(8, add(startBitIndex, n))
+            let startByte := mload(add(data, add(startByteIndex, 32)))
+            result := and(shr(shift, startByte), sub(shl(n, 8), 1))
+        }
+    }
+
+    function _setBits(bytes memory data, uint256 offset, uint256 value) internal {
+        assembly {
+            // Calculate the starting byte and starting bit within that byte based on the provided offset
+            let startByteIndex := div(offset, 8)
+            let startBitIndex := mod(offset, 8)
+
+            // Calculate the number of bits in the value
+            let valueBits := gt(value, 0)
+            for {
+
+            } gt(value, 0) {
+                valueBits := add(valueBits, 1)
+            } {
+                value := shr(1, value)
+            }
+
+            // // Check if the value fits within the specified range
+            // require(add(startBitIndex, valueBits) <= 8, "Value exceeds available bits");
+
+            // Calculate the mask to set the specified bits in the starting byte
+            let mask := shl(startBitIndex, 1)
+            for {
+
+            } gt(valueBits, 0) {
+                mask := add(mask, shl(1, 1))
+                valueBits := sub(valueBits, 1)
+            } {
+
+            }
+
+            // Load the starting byte
+            let startByte := mload(add(data, add(startByteIndex, 32)))
+
+            // Clear the bits to be set in the starting byte
+            startByte := and(startByte, not(mask))
+
+            // Set the bits with the provided value
+            startByte := or(startByte, shl(startBitIndex, value))
+
+            // Store the modified starting byte back in the data
+            mstore(add(data, add(startByteIndex, 32)), startByte)
+        }
+    }
+
+    function _areBytesEqual(bytes memory a, bytes memory b) internal pure returns (bool) {
+        if (a.length != b.length) {
+            return false;
+        }
+
+        for (uint256 i = 0; i < a.length; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

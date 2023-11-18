@@ -10,6 +10,13 @@ import {getConnection, fetchContract} from './connection';
 import artifacts from '../generated/artifacts';
 import {network} from 'hardhat';
 
+enum Move {
+	RIGHT,
+	DOWN,
+	LEFT,
+	UP,
+}
+
 async function deployVitalikSecret() {
 	const {accounts, walletClient, publicClient} = await getConnection();
 	const [deployer, ...otherAccounts] = accounts;
@@ -48,9 +55,43 @@ describe('VitalikSecret', function () {
 
 		it('Should be able to solve puzzel', async function () {
 			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployVitalikSecret);
-			const txHash = await puzzle.write.proposeSolution(['0x'], {
-				account: otherAccounts[0],
-			});
+			const txHash = await puzzle.write.proposeSolution(
+				[
+					[
+						Move.UP,
+						Move.LEFT,
+						Move.LEFT,
+						Move.DOWN,
+						Move.LEFT,
+						Move.UP,
+						Move.UP,
+						Move.UP,
+						Move.RIGHT,
+						Move.RIGHT,
+						Move.DOWN,
+						Move.DOWN,
+						Move.LEFT,
+						Move.UP,
+						Move.LEFT,
+						Move.DOWN,
+						Move.DOWN,
+						Move.RIGHT,
+						Move.RIGHT,
+						Move.UP,
+						Move.UP,
+						Move.UP,
+						Move.LEFT,
+						Move.DOWN,
+						Move.DOWN,
+						Move.RIGHT,
+						Move.RIGHT,
+						Move.DOWN,
+					],
+				],
+				{
+					account: otherAccounts[0],
+				},
+			);
 			// TODO
 			// expect(await publicClient.waitForTransactionReceipt({hash: txHash})).to.includeEvent(
 			// 	puzzle.abi,
