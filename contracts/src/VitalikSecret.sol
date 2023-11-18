@@ -19,17 +19,12 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     }
 
     uint256 public constant SIZE = 4;
-    uint256 public constant NUM_BITS_PER_CELL = 4;
-    bytes public constant SOLUTION = "0x123456789ABCDEF0";
-
-    // TODO immutable but constructor match a pre-agreed block hash
-    bytes public constant RANDOM = "0x213456789ABCDFE0";
     uint256 immutable INITIAL_POSITION = 15;
 
     // TODO commit first to prevent front-running
     // function proposeSolution(bytes memory moves) external {
     function proposeSolution(Move[] calldata moves) external {
-        bytes memory state = RANDOM;
+        uint8[SIZE*SIZE] memory state = [2,1,3,4,5,6,7,8,9,10,11,12,13,15,14,0];
         uint256 position = INITIAL_POSITION;
 
         for (uint256 i = 0; i < moves.length; i++) {
@@ -60,19 +55,14 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             );
         }
 
-        bool equal = _areBytesEqual(state, SOLUTION);
-        if (!equal) {
-            console.logBytes(state);
-            console.logBytes(SOLUTION);
-            bool equalRandom = _areBytesEqual(state, RANDOM);
-            console.log(equalRandom ? "isSTILLRANDOM" : "diff");
-            console.logBytes(RANDOM);
+        require(state[state.length - 1] == 0, "invalid solution (carret)");
+        for (uint256 i = 0; i < state.length - 1; i++) {
+            require(state[i] == i+1, "invalid solution");
         }
-        require(equal, "NOT EQUAL TO SOLUTION");
     }
 
     function step(
-        bytes memory currentState,
+        uint8[SIZE*SIZE] memory currentState,
         uint256 position,
         Move move
     ) internal returns (bool valid, uint256 newPosition) {
@@ -117,66 +107,12 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         return "VTS";
     }
 
-    // ---------------------------------------------------------------------------
-    function _at(bytes memory data, uint256 pos) internal returns (uint256 v) {
-        assembly {
-            let b := mload(add(add(data, 32), div(pos, 2)))
-            v := and(b, 0xF)
-            if eq(mod(pos, 2), 1) {
-                v := shr(4, b)
-            }
-        }
-    }
-
-    function _swap(bytes memory data, uint256 a, uint256 b) internal {
-        // transform logical position in buffer byte position:
-        a = a * NUM_BITS_PER_CELL;
-        b = b * NUM_BITS_PER_CELL;
-        uint256 aValue = _extractBits(data, a, NUM_BITS_PER_CELL);
-        uint256 bValue = _extractBits(data, b, NUM_BITS_PER_CELL);
+    function _swap(uint8[SIZE*SIZE] memory data, uint256 a, uint256 b) internal {
+        uint8 aValue = data[a];
+        uint8 bValue = data[b];
         console.log(string.concat("a: ", Strings.toString(a), " = ", Strings.toString(aValue)));
         console.log(string.concat("b: ", Strings.toString(b), " = ", Strings.toString(bValue)));
-        _setBits(data, a, bValue);
-        _setBits(data, b, aValue);
-    }
-
-    function _extractBits(bytes memory data, uint256 offset, uint256 n) internal pure returns (uint256 result) {
-        assembly {
-            let startByteIndex := div(offset, 8) // 7.5
-            let startBitIndex := mod(offset, 8) // 4
-            result := shr(sub(256, n), shl(startBitIndex, mload(add(data, add(startByteIndex, 32)))))
-        }
-    }
-
-    function _setBits(bytes memory data, uint256 offset, uint256 value) internal {
-        assembly {
-            // Calculate the starting byte and starting bit within that byte based on the provided offset
-            let startByteIndex := div(offset, 8)
-            let startBitIndex := mod(offset, 8)
-            let start := add(data, add(startByteIndex, 32))
-
-            let existing := mload(start)
-            let v2 := 0
-            if gt(startBitIndex, 0) {
-                let v1 := 0
-                v2 := 0
-                mstore(add(data, add(startByteIndex, 32)), v1)
-            }
-            mstore(add(data, add(startByteIndex, 32)), v2)
-        }
-    }
-
-    function _areBytesEqual(bytes memory a, bytes memory b) internal pure returns (bool) {
-        if (a.length != b.length) {
-            return false;
-        }
-
-        for (uint256 i = 0; i < a.length; i++) {
-            if (a[i] != b[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        data[a] = bValue;
+        data[b] = aValue;
     }
 }
