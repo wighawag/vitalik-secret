@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let start: number[];
+	export let size: number = 4;
 
 	type TileData = {
 		si: number;
@@ -21,34 +22,34 @@
 		transform: string;
 		clip: string;
 	} & TileData)[] = [];
-	for (let i = 0; i < 16; i++) {
+	for (let i = 0; i < size * size; i++) {
 		tiles.push({
 			transform: 'translate(0,0)',
 			clip: `#c${i.toString().padStart(4, '0')}`,
 			si: i,
 			i: i,
-			x: i % 4,
-			y: Math.floor(i / 4),
-			origx: i % 4,
-			origy: Math.floor(i / 4),
+			x: i % size,
+			y: Math.floor(i / size),
+			origx: i % size,
+			origy: Math.floor(i / size),
 		});
 	}
 
-	let emptyCellPosition = {i: 15, x: 3, y: 3};
+	let emptyCellPosition = {i: size * size - 1, x: size - 1, y: size - 1};
 	$: {
 		const newTiles = tiles;
 		for (let i = 0; i < start.length; i++) {
-			const x = i % 4;
-			const y = Math.floor(i / 4);
-			const shuffledI = start[i] == 0 ? 15 : start[i] - 1;
-			if (shuffledI == 15) {
+			const x = i % size;
+			const y = Math.floor(i / size);
+			const shuffledI = start[i] == 0 ? size * size - 1 : start[i] - 1;
+			if (shuffledI == size * size - 1) {
 				emptyCellPosition.i = i;
 				emptyCellPosition.x = x;
 				emptyCellPosition.y = y;
 				console.log(JSON.stringify(emptyCellPosition));
 			}
-			const shuffledX = shuffledI % 4;
-			const shuffledY = Math.floor(shuffledI / 4);
+			const shuffledX = shuffledI % size;
+			const shuffledY = Math.floor(shuffledI / size);
 			const dx = x - shuffledX;
 			const dy = y - shuffledY;
 
@@ -94,62 +95,17 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<svg on:click={click} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+<svg on:click={click} xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`}>
 	<defs>
 		<!-- we define the image as #v-->
-		<image width="4" height="4" id="v" href="/images/vitalik-secret.jpeg"></image>
+		<image width={size} height={size} id="v" href="/images/vitalik-secret.jpeg"></image>
 	</defs>
-	<!-- clip path represent a portion of the image, 4 * 4 = 16 -->
-	<!-- each are size 1x1 as we defined the viewbox to be 4x4 -->
-	<clipPath id="c0000">
-		<rect x="0" y="0" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0001">
-		<rect x="1" y="0" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0002">
-		<rect x="2" y="0" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0003">
-		<rect x="3" y="0" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0004">
-		<rect x="0" y="1" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0005">
-		<rect x="1" y="1" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0006">
-		<rect x="2" y="1" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0007">
-		<rect x="3" y="1" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0008">
-		<rect x="0" y="2" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0009">
-		<rect x="1" y="2" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0010">
-		<rect x="2" y="2" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0011">
-		<rect x="3" y="2" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0012">
-		<rect x="0" y="3" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0013">
-		<rect x="1" y="3" width="1" height="1" />
-	</clipPath>
-	<clipPath id="c0014">
-		<rect x="2" y="3" width="1" height="1" />
-	</clipPath>
-	<!-- TODO make this the clear square to move around-->
-	<clipPath id="c0015">
-		<rect x="3" y="3" width="1" height="1" />
-	</clipPath>
+
+	{#each tiles as tile}
+		<clipPath id={`c${tile.i.toString().padStart(4, '0')}`}>
+			<rect x={tile.x} y={tile.y} width="1" height="1" />
+		</clipPath>
+	{/each}
 
 	<!-- we then use them all so they get displayed and we can move/shuffle them  -->
 	<!-- id represent the tile shuffled so id=i000 , so the clear path can be any -->
