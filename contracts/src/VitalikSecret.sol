@@ -142,11 +142,9 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
     function _extractBits(bytes memory data, uint256 offset, uint256 n) internal pure returns (uint256 result) {
         assembly {
-            let startByteIndex := div(offset, 8)
-            let startBitIndex := mod(offset, 8)
-            let shift := sub(8, add(startBitIndex, n))
-            let startByte := mload(add(data, add(startByteIndex, 32)))
-            result := and(shr(shift, startByte), sub(shl(n, 8), 1))
+            let startByteIndex := div(offset, 8) // 7.5
+            let startBitIndex := mod(offset, 8) // 4
+            result := shr(sub(256, n), shl(startBitIndex, mload(add(data, add(startByteIndex, 32)))))
         }
     }
 
