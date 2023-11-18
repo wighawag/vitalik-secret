@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {createPuzzle} from '$lib/utils/puzzle';
+	import {solvePuzzleAStar} from '$lib/utils/solver';
 
 	export let start: number[];
 	export let solution: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
@@ -50,81 +51,13 @@
 
 	export const puzzle = {
 		async solve() {
-			const puzzleToSolve = createPuzzle(size, start, solution);
-			const moves = puzzleToSolve.solve();
+			const moves = solvePuzzleAStar(
+				size,
+				{tiles: start, position: emptyCellPosition.i},
+				{tiles: solution, position: solution.indexOf(0)},
+			);
+
 			console.log(moves);
-			// const seen: {[key: string]: boolean} = {};
-			// const queue: {i: number; m: number}[] = [];
-			// while (!match()) {
-			// 	const upTile: number | undefined =
-			// 		emptyCellPosition.y > 0 ? start[(emptyCellPosition.y - 1) * emptyCellPosition.x] : undefined;
-			// 	const downTile: number | undefined =
-			// 		emptyCellPosition.y < size - 1 ? start[(emptyCellPosition.y + 1) * emptyCellPosition.x] : undefined;
-			// 	const leftTile: number | undefined =
-			// 		emptyCellPosition.x > 0 ? start[emptyCellPosition.y * emptyCellPosition.x - 1] : undefined;
-			// 	const rightTile: number | undefined =
-			// 		emptyCellPosition.x < size - 1 ? start[emptyCellPosition.y * emptyCellPosition.x + 1] : undefined;
-
-			// 	// if (upTile && tiles[upTile].y >= tiles[upTile].origy) {
-			// 	// 	swap(tiles[upTile].i, emptyCellPosition.i);
-			// 	// } else if (downTile && tiles[downTile].y < tiles[downTile].origy) {
-			// 	// 	swap(tiles[downTile].i, emptyCellPosition.i);
-			// 	// } else if (leftTile && tiles[leftTile].x > tiles[leftTile].origx) {
-			// 	// 	swap(tiles[leftTile].i, emptyCellPosition.i);
-			// 	// } else if (rightTile && tiles[rightTile].x < tiles[rightTile].origy) {
-			// 	// 	swap(tiles[rightTile].i, emptyCellPosition.i);
-			// 	// } else {
-			// 	// 	console.log('no best move');
-			// 	// 	// const rnd = Math.floor(Math.random() * 4);
-			// 	// 	// let x = emptyCellPosition.x;
-			// 	// 	// let y = emptyCellPosition.y;
-			// 	// 	// if (rnd == 0) {
-			// 	// 	// 	if (x < size - 1) {
-			// 	// 	// 		x++;
-			// 	// 	// 	} else {
-			// 	// 	// 		x--;
-			// 	// 	// 	}
-			// 	// 	// } else if (rnd == 1) {
-			// 	// 	// 	if (y < size - 1) {
-			// 	// 	// 		y++;
-			// 	// 	// 	} else {
-			// 	// 	// 		y--;
-			// 	// 	// 	}
-			// 	// 	// } else if (rnd == 2) {
-			// 	// 	// 	if (x > 0) {
-			// 	// 	// 		x--;
-			// 	// 	// 	} else {
-			// 	// 	// 		x++;
-			// 	// 	// 	}
-			// 	// 	// } else if (rnd == 3) {
-			// 	// 	// 	if (y > 0) {
-			// 	// 	// 		y--;
-			// 	// 	// 	} else {
-			// 	// 	// 		y++;
-			// 	// 	// 	}
-			// 	// 	// }
-			// 	// 	// swap(y * size + x, emptyCellPosition.i);
-			// 	// }
-			// 	if (rightTile) {
-			// 		queue.push({i: tiles[rightTile].i, m: 0});
-			// 	}
-			// 	if (downTile) {
-			// 		queue.push({i: tiles[downTile].i, m: 1});
-			// 	}
-			// 	if (leftTile) {
-			// 		queue.push({i: tiles[leftTile].i, m: 2});
-			// 	}
-			// 	if (upTile) {
-			// 		queue.push({i: tiles[upTile].i, m: 3});
-			// 	}
-
-			// 	const tileData = queue.shift();
-			// 	if (tileData) {
-			// 		swap(tileData.i, emptyCellPosition.i);
-			// 	}
-
-			// 	await wait(0.02);
-			// }
 		},
 	};
 
