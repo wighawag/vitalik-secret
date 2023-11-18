@@ -124,5 +124,5 @@
 		/>
 	{/each}
 
-	<rect x={emptyCellPosition.x} y={emptyCellPosition.y} width="1" height="1" rx="0" />
+	<rect x={emptyCellPosition.x} y={emptyCellPosition.y} width="1" height="1" rx="0" style="fill: red;" />
 </svg>
