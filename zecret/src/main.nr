@@ -9,9 +9,12 @@ type Move = u2;
 type Position = u8;
 type Moves = [Move; MAX_MOVES];
 type State = [Tile; SIZE * SIZE];
+type Address = Field;
 
-fn main(moves: Moves, count_field: pub Field) {
+fn main(moves: Moves, count_field: pub Field, solver: Address, sender: pub Address) {
     std::println(moves);
+    std::println(solver);
+    assert(solver == sender);
     let mut state: State = [2,1,3,4,5,6,7,8,9,10,11,12,13,15,14,0];
     let mut position: Position = INITIAL_POSITION;
     let bytes = count_field.to_le_bytes(32);
@@ -83,8 +86,5 @@ fn test_main() {
         1, 0, 0, 3, 3, 3, 2, 1,
         1, 0, 0, 1, 0, 0,
         ]
-        , 28);
-
-    // Uncomment to make test fail
-    // main(1, 1);
+        , 28, 0xD6579e462d7853804110A9b43e447030015191CD, 0xD6579e462d7853804110A9b43e447030015191CD)
 }
