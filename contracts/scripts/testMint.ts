@@ -15,19 +15,11 @@ async function main() {
 
 	const {walletClient} = await getConnection();
 
-	const args = process.argv.slice(2);
-	const tokenID = args[0] || process.env.TOKEN_ID;
-
-	if (!tokenID) {
-		throw new Error(`please provide a tokenID as parameter`);
-	}
-
-	const tokenIDAsBN = BigInt(tokenID);
-
+	const [address] = await walletClient.getAddresses();
 	const VitalikSecret = env.deployments.VitalikSecret as Deployment<typeof context.artifacts.VitalikSecret.abi>;
 	const VitalikSecretContract = await fetchContract(VitalikSecret);
-	const message = await VitalikSecretContract.read.tokenURI([tokenIDAsBN]);
+	const hash = await VitalikSecretContract.write.testMint([100n], {account: address});
 
-	console.log({tokenID, message});
+	console.log({hash, account: address});
 }
 main();
