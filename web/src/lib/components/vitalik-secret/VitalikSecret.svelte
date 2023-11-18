@@ -1,10 +1,42 @@
 <script lang="ts">
-	import {createPuzzle} from '$lib/utils/puzzle';
-	import {solvePuzzleAStar} from '$lib/utils/solver';
-
-	export let start: number[];
 	export let solution: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
 	export let size: number = 4;
+
+	const {state: initialState, position: initialPosition, moves} = generate4x4(100);
+	let state: number[] = initialState;
+
+	function generate4x4(n: number) {
+		const size = 4;
+		const values: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
+		let position = 10;
+
+		const moves = [];
+		for (let i = 0; i < n; i++) {
+			const x = position % size;
+			const y = Math.floor(position / size);
+			const move = Math.floor(Math.random() * 4);
+			let newPosition = position;
+			if (move == 0 && x < size - 1) {
+				newPosition = y * size + x + 1;
+			} else if (move == 1 && y < size - 1) {
+				newPosition = (y + 1) * size + x;
+			} else if (move == 2 && x > 0) {
+				newPosition = y * size + x - 1;
+			} else if (move == 3 && y > 0) {
+				newPosition = (y - 1) * size + x;
+			}
+
+			if (newPosition != position) {
+				const tmp = values[newPosition];
+				values[newPosition] = values[position];
+				values[position] = tmp;
+				position = newPosition;
+				moves.unshift((move + 2) % 4);
+			}
+		}
+
+		return {state: values, moves, position};
+	}
 
 	function match(): boolean {
 		for (let i = 0; i < solution.length; i++) {
@@ -27,7 +59,7 @@
 	const opened = new PriorityQueue<State>();
     const closed = new Map<string, number>();
     let nb_tries = 0;
-    opened.insert(start, start.get_h(heuristic));
+    opened.insert(state, state.get_h(heuristic));
     while (!opened.is_empty()) {
         nb_tries += 1;
         const state_e = opened.min();
@@ -50,16 +82,9 @@
 	*/
 
 	export const puzzle = {
-		async solve(moves: number[]) {
-			// const moves = solvePuzzleAStar(
-			// 	size,
-			// 	{tiles: start, position: emptyCellPosition.i},
-			// 	{tiles: solution, position: solution.indexOf(0)},
-			// );
-
-			console.log(moves);
-
-			for (const move of moves) {
+		async solve() {
+			const frozenMoves = moves.slice(0);
+			for (const move of frozenMoves) {
 				const {x, y, i: position} = emptyCellPosition;
 				let newPosition = position;
 				if (move == 0) {
@@ -71,16 +96,17 @@
 				} else if (move == 3) {
 					newPosition = (y - 1) * size + x;
 				}
-				swap(newPosition, emptyCellPosition.i);
+				swap(newPosition, emptyCellPosition.i, move);
 				await wait(0.02);
 			}
 		},
 	};
 
-	function swap(tile: number, empty: number) {
-		const tmp = start[tile];
-		start[tile] = start[empty];
-		start[empty] = tmp;
+	function swap(tile: number, empty: number, move: number) {
+		const tmp = state[tile];
+		state[tile] = state[empty];
+		state[empty] = tmp;
+		moves.unshift((move + 2) % 4);
 	}
 
 	let BLANK_TILE = 11;
@@ -121,10 +147,10 @@
 	let emptyCellPosition = {i: BLANK_TILE - 1, x: (BLANK_TILE - 1) % size, y: Math.floor((BLANK_TILE - 1) / size)};
 	$: {
 		const newTiles = tiles;
-		for (let i = 0; i < start.length; i++) {
+		for (let i = 0; i < state.length; i++) {
 			const x = i % size;
 			const y = Math.floor(i / size);
-			const shuffledI = start[i] == 0 ? BLANK_TILE - 1 : start[i] >= 11 ? start[i] : start[i] - 1;
+			const shuffledI = state[i] == 0 ? BLANK_TILE - 1 : state[i] >= 11 ? state[i] : state[i] - 1;
 			if (shuffledI == BLANK_TILE - 1) {
 				emptyCellPosition.i = i;
 				emptyCellPosition.x = x;
@@ -162,14 +188,21 @@
 			origy: parseInt(tileSet.origy),
 		};
 
-		if (
-			(tile.x == emptyCellPosition.x - 1 && tile.y == emptyCellPosition.y) ||
-			(tile.x == emptyCellPosition.x + 1 && tile.y == emptyCellPosition.y) ||
-			(tile.x == emptyCellPosition.x && tile.y == emptyCellPosition.y - 1) ||
-			(tile.x == emptyCellPosition.x && tile.y == emptyCellPosition.y + 1)
-		) {
-			console.log(tile);
-			swap(tile.i, emptyCellPosition.i);
+		let move = -1;
+		if (tile.x == emptyCellPosition.x - 1 && tile.y == emptyCellPosition.y) {
+			move = 2;
+		}
+		if (tile.x == emptyCellPosition.x + 1 && tile.y == emptyCellPosition.y) {
+			move = 0;
+		}
+		if (tile.x == emptyCellPosition.x && tile.y == emptyCellPosition.y - 1) {
+			move = 3;
+		}
+		if (tile.x == emptyCellPosition.x && tile.y == emptyCellPosition.y + 1) {
+			move = 1;
+		}
+		if (move >= 0) {
+			swap(tile.i, emptyCellPosition.i, move);
 		}
 	}
 </script>
