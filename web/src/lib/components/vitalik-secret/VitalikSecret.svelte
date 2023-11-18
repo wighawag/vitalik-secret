@@ -43,7 +43,7 @@
 		for (let i = 0; i < start.length; i++) {
 			const x = i % size;
 			const y = Math.floor(i / size);
-			const shuffledI = start[i] == 0 ? BLANK_TILE - 1 : start[i] - 1;
+			const shuffledI = start[i] == 0 ? BLANK_TILE - 1 : start[i] >= 11 ? start[i] : start[i] - 1;
 			if (shuffledI == BLANK_TILE - 1) {
 				emptyCellPosition.i = i;
 				emptyCellPosition.x = x;
