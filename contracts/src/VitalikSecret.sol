@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import "solidity-proxy/solc_0.8/EIP1967/Proxied.sol";
 import "solidity-kit/solc_0.8/ERC721/implementations/BasicERC721.sol";
 import "solidity-kit/solc_0.8/ERC721/interfaces/IERC721Metadata.sol";
+import {UltraVerifier} from "../zecret/contract/zecret/plonk_vk.sol";
 
 // DEBUG
 import "hardhat/console.sol";
@@ -11,6 +12,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice a puzzle
 contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
+
+    UltraVerifier zecret;
+
     enum Move {
         RIGHT,
         DOWN,
@@ -19,6 +23,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     }
 
     uint256 public constant SIZE = 4;
+
+    // TODO currently the blank is bot right, but it should be instead of bulge
     uint256 immutable INITIAL_POSITION = 15;
 
     uint256 public lowestNumberOfMoves;
@@ -45,8 +51,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         return state;
     }
 
-    // TODO commit first to prevent front-running
-    // function proposeSolution(bytes memory moves) external {
     function proposeSolution(Move[] calldata moves) external {
         uint8[SIZE * SIZE] memory state = [2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 0];
         //uint8[SIZE*SIZE] memory state = initialState();
@@ -55,19 +59,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
         for (uint256 i = 0; i < moves.length; i++) {
             bool valid;
-            uint256 oldPosition = position; // TODO remove
+            uint256 oldPosition = position;
             (valid, position) = step(state, position, moves[i]);
-            if (valid) {
-                console.log(
-                    string.concat(
-                        Strings.toString(oldPosition),
-                        " => ",
-                        Strings.toString(position),
-                        " : ",
-                        Strings.toString(uint8(moves[i]))
-                    )
-                );
-            }
             require(
                 valid,
                 string.concat(
@@ -76,12 +69,11 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
                     " => ",
                     Strings.toString(position),
                     " : ",
-                    Strings.toString(uint8(moves[i]))
+                    Strings.toString(i)
                 )
             );
         }
 
-        // TODO currently the blank is bot right, but it should be instead of bulge
         require(state[state.length - 1] == 0, "invalid solution (carret)");
         for (uint256 i = 0; i < state.length - 1; i++) {
             require(state[i] == i + 1, "invalid solution");
@@ -90,6 +82,16 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         require(lowestNumberOfMoves == 0 || moves.length < lowestNumberOfMoves, "TOO_MANY_MOVES");
         lowestNumberOfMoves = moves.length;
         _safeMint(msg.sender, moves.length);
+    }
+
+    function proposeSolutionProof(uint256 numMoves, bytes calldata proof) external {
+        bytes32[] memory publicInputs = new bytes32[](2);
+        publicInputs[0] = bytes32(numMoves);
+        publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
+        require(zecret.verify(proof, publicInputs), "INVALID_PROOF");
+        require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
+        lowestNumberOfMoves = numMoves;
+        _safeMint(msg.sender, numMoves);
     }
 
     function step(
