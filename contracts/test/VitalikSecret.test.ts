@@ -53,6 +53,14 @@ describe('VitalikSecret', function () {
 			expect(uri).to.equal('');
 		});
 
+		it('initial state should be valid', async function () {
+			const {puzzle} = await loadFixture(deployVitalikSecret);
+			const initialState = await puzzle.read.initialState();
+			console.log(initialState);
+			expect(initialState.length).to.equal(new Set(initialState).size);
+			expect(initialState[initialState.length-1]).to.equal(0);
+		});
+
 		it('Should be able to solve puzzel', async function () {
 			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployVitalikSecret);
 			const txHash = await puzzle.write.proposeSolution(
