@@ -118,6 +118,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
                 newPosition = (y - 1) * SIZE + x;
                 _swap(currentState, position, newPosition);
             }
+        } else {
+            valid = false;
         }
     }
 
