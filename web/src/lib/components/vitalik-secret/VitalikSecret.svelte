@@ -6,38 +6,48 @@
 	let state: number[] = initialState;
 
 	function generate4x4(n: number) {
-		const goal = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
-		const size = 4;
-		const values: number[] = goal;
-		let position = 10;
+		const result = {
+			state: [2, 4, 7, 3, 10, 9, 6, 0, 5, 1, 11, 8, 12, 13, 14, 15],
+			position: 7,
+			moves: [
+				2, 1, 3, 0, 3, 2, 2, 1, 3, 1, 1, 1, 3, 2, 3, 0, 3, 1, 0, 2, 3, 2, 1, 3, 1, 0, 0, 3, 0, 1, 2, 1, 3, 2, 1, 3, 1,
+				2, 1, 3, 3, 0, 0, 3, 0, 1, 2, 2, 0, 1, 0, 3, 1, 2, 0, 3, 3, 1, 2, 0, 2, 1, 0, 3, 1, 3, 2, 0, 1, 1, 3, 3, 2, 1,
+				0, 2, 1, 3,
+			],
+			goal: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15],
+		};
+		// const goal = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
+		// const size = 4;
+		// const values: number[] = goal.slice(0);
+		// let position = 10;
 
-		const moves = [];
-		for (let i = 0; i < n; i++) {
-			const x = position % size;
-			const y = Math.floor(position / size);
-			const move = Math.floor(Math.random() * 4);
-			let newPosition = position;
-			if (move == 0 && x < size - 1) {
-				newPosition = y * size + x + 1;
-			} else if (move == 1 && y < size - 1) {
-				newPosition = (y + 1) * size + x;
-			} else if (move == 2 && x > 0) {
-				newPosition = y * size + x - 1;
-			} else if (move == 3 && y > 0) {
-				newPosition = (y - 1) * size + x;
-			}
+		// const moves = [];
+		// for (let i = 0; i < n; i++) {
+		// 	const x = position % size;
+		// 	const y = Math.floor(position / size);
+		// 	const move = Math.floor(Math.random() * 4);
+		// 	let newPosition = position;
+		// 	if (move == 0 && x < size - 1) {
+		// 		newPosition = y * size + x + 1;
+		// 	} else if (move == 1 && y < size - 1) {
+		// 		newPosition = (y + 1) * size + x;
+		// 	} else if (move == 2 && x > 0) {
+		// 		newPosition = y * size + x - 1;
+		// 	} else if (move == 3 && y > 0) {
+		// 		newPosition = (y - 1) * size + x;
+		// 	}
 
-			if (newPosition != position) {
-				const tmp = values[newPosition];
-				values[newPosition] = values[position];
-				values[position] = tmp;
-				position = newPosition;
-				moves.unshift((move + 2) % 4);
-			}
-		}
+		// 	if (newPosition != position) {
+		// 		const tmp = values[newPosition];
+		// 		values[newPosition] = values[position];
+		// 		values[position] = tmp;
+		// 		position = newPosition;
+		// 		moves.unshift((move + 2) % 4);
+		// 	}
+		// }
 
-		const result = {state: values, moves, position, goal};
-		console.log(JSON.stringify(result, null, 2));
+		// const result = {state: values, moves, position, goal};
+		// console.log(JSON.stringify(result, null, 2));
 		return result;
 	}
 
