@@ -1,10 +1,6 @@
 # Vitalik's Secret
 
-<p align="center">
-  <a href="https://vitalik-secret.vercel.app">
-    <img src="docs/public/screenshot32x32.png" alt="Vitalik's Secret Logo" width="500">
-  </a>
-</p>
+{% include youtube.html id="4GjPklxDX3Q" %}
 
 A world scale puzzle that challenge anyone to find the best solution. It is a NP-hard problem so rife for exploration
 
