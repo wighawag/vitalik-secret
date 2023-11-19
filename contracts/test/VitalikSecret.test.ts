@@ -63,36 +63,10 @@ describe('VitalikSecret', function () {
 
 		it('Should be able to solve puzzel', async function () {
 			const {puzzle, otherAccounts, publicClient} = await loadFixture(deployVitalikSecret);
-			const solution = [
-				Move.UP,
-				Move.LEFT,
-				Move.LEFT,
-				Move.DOWN,
-				Move.LEFT,
-				Move.UP,
-				Move.UP,
-				Move.UP,
-				Move.RIGHT,
-				Move.RIGHT,
-				Move.DOWN,
-				Move.DOWN,
-				Move.LEFT,
-				Move.UP,
-				Move.LEFT,
-				Move.DOWN,
-				Move.DOWN,
-				Move.RIGHT,
-				Move.RIGHT,
-				Move.UP,
-				Move.UP,
-				Move.UP,
-				Move.LEFT,
-				Move.DOWN,
-				Move.DOWN,
-				Move.RIGHT,
-				Move.RIGHT,
-				Move.DOWN,
-			];
+			const solution =  [2, 1, 3, 0, 3, 2, 2, 1, 3, 1, 1, 1, 3, 2, 3, 0, 3, 1, 0, 2, 3, 2, 1, 3, 1, 0, 0, 3, 0, 1, 2, 1, 3, 2, 1, 3, 1,
+				2, 1, 3, 3, 0, 0, 3, 0, 1, 2, 2, 0, 1, 0, 3, 1, 2, 0, 3, 3, 1, 2, 0, 2, 1, 0, 3, 1, 3, 2, 0, 1, 1, 3, 3, 2, 1,
+				0, 2, 1, 3,
+				];
 			console.log(solution)
 			const txHash = await puzzle.write.proposeSolution(
 				[

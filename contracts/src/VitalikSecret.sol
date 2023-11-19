@@ -5,9 +5,6 @@ import "solidity-proxy/solc_0.8/EIP1967/Proxied.sol";
 import "solidity-kit/solc_0.8/ERC721/implementations/BasicERC721.sol";
 import "solidity-kit/solc_0.8/ERC721/interfaces/IERC721Metadata.sol";
 import {UltraVerifier} from "../zecret/contract/zecret/plonk_vk.sol";
-
-// DEBUG
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice a puzzle
@@ -24,17 +21,12 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
     uint256 public constant SIZE = 4;
 
-    // TODO currently the blank is bot right, but it should be instead of bulge
-    uint256 immutable INITIAL_POSITION = 15;
+    uint256 immutable INITIAL_POSITION = 7;
+    uint256 immutable FINAL_POSITION = 10;
 
     uint256 public lowestNumberOfMoves;
 
-    function randomSeed() internal view returns (uint256) {
-        //TODO from future block hash
-        return 42;
-    }
-
-    function initialState() public view returns (uint8[SIZE * SIZE] memory) {
+    function randomState() public view returns (uint8[SIZE * SIZE] memory) {
         uint8[SIZE * SIZE] memory state;
         uint256 randomBoardSize = state.length - 1;
         state[randomBoardSize] = 0;
@@ -52,8 +44,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     }
 
     function proposeSolution(Move[] calldata moves) external {
-        uint8[SIZE * SIZE] memory state = [2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 0];
-        //uint8[SIZE*SIZE] memory state = initialState();
+        uint8[SIZE * SIZE] memory state = [2, 4, 7, 3, 10, 9, 6, 0, 5, 1, 11, 8, 12, 13, 14, 15];
 
         uint256 position = INITIAL_POSITION;
 
@@ -74,9 +65,12 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             );
         }
 
-        require(state[state.length - 1] == 0, "invalid solution (carret)");
-        for (uint256 i = 0; i < state.length - 1; i++) {
-            require(state[i] == i + 1, "invalid solution");
+        require(state[FINAL_POSITION] == 0, "invalid solution (carret)");
+        for (uint256 i = 0; i < FINAL_POSITION; i++) {
+            require(state[i] == i + 1, "invalid solution 1/2");
+        }
+        for (uint256 i = FINAL_POSITION + 1; i < state.length; i++) {
+            require(state[i] == i, "invalid solution 2/2");
         }
 
         require(lowestNumberOfMoves == 0 || moves.length < lowestNumberOfMoves, "TOO_MANY_MOVES");
@@ -88,9 +82,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         bytes32[] memory publicInputs = new bytes32[](2);
         publicInputs[0] = bytes32(numMoves);
         publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
-        console.log(bytes32ToHexString(publicInputs[0]));
-        console.log(bytes32ToHexString(publicInputs[1]));
-        require(zecret.verify(proof, publicInputs), "INVALID_PROOF");
         require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
         lowestNumberOfMoves = numMoves;
         _safeMint(msg.sender, numMoves);
@@ -171,8 +162,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     function _swap(uint8[SIZE * SIZE] memory data, uint256 a, uint256 b) internal pure {
         uint8 aValue = data[a];
         uint8 bValue = data[b];
-        console.log(string.concat("a: ", Strings.toString(a), " = ", Strings.toString(aValue)));
-        console.log(string.concat("b: ", Strings.toString(b), " = ", Strings.toString(bValue)));
         data[a] = bValue;
         data[b] = aValue;
     }
@@ -193,5 +182,9 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         }
 
         return string(hexString);
+    }
+
+    function randomSeed() internal view returns (uint256) {
+        return 42;
     }
 }
