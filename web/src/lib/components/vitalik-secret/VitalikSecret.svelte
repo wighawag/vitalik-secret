@@ -5,7 +5,7 @@
 	let clazz: string = '';
 	export {clazz as class};
 
-	const {state: initialState, position: initialPosition, moves} = size == 4 ? generate4x4(100) : generate32x32(30000);
+	const {state: initialState, position: initialPosition, moves} = size == 4 ? generate4x4(100) : generate(size);
 	let state: number[] = initialState;
 
 	function generate4x4(n: number) {
@@ -54,8 +54,8 @@
 		return result;
 	}
 
-	function generate32x32(n: number) {
-		const size = 32;
+	function generate(size: number) {
+		const n = Math.max(size * size * size, 100000);
 		const goal: number[] = [];
 		for (let i = 0; i < size * size; i++) {
 			goal.push(i + 1);
