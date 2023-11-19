@@ -6,6 +6,8 @@
   </a>
 </p>
 
+Explanation Video: https://www.youtube.com/watch?v=4GjPklxDX3Q
+
 A world scale puzzle that challenge anyone to find the best solution. It is a NP-hard problem so rife for exploration
 
 ## What is it ?
