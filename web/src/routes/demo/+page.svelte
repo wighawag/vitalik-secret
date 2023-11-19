@@ -3,8 +3,11 @@
 	import Web3ConnectionUI from '$lib/web3/Web3ConnectionUI.svelte';
 	import {account, connection, network, contracts} from '$lib/web3';
 	import VitalikSecret from '$lib/components/vitalik-secret/VitalikSecret.svelte';
+	import {params} from '$lib/config';
 
 	let puzzle: {solve(): Promise<void>};
+
+	let size = params['size'] ? parseInt(params['size']) : 4;
 </script>
 
 <!-- Navbar -->
@@ -22,6 +25,7 @@
 <!-- Puzzle Section -->
 <div class="flex justify-center flex-col items-center min-h-screen bg-purple-900 p-4">
 	<VitalikSecret
+		{size}
 		class="w-full max-w-xs lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl border-4 border-white rounded-lg"
 		bind:puzzle
 	/>
@@ -31,16 +35,6 @@
 			class="bg-yellow-400 text-purple-900 rounded-full py-2 px-6 hover:bg-yellow-500 transition duration-300 ease-in-out"
 		>
 			Solve
-		</button>
-
-		<button
-			on:click={() =>
-				contracts.execute(async ({contracts, connection}) => {
-					// Transaction logic...
-				})}
-			class="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-		>
-			Commit And Mint!
 		</button>
 	</div>
 </div>

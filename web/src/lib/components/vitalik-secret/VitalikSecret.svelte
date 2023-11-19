@@ -5,7 +5,7 @@
 	let clazz: string = '';
 	export {clazz as class};
 
-	const {state: initialState, position: initialPosition, moves} = generate4x4(100);
+	const {state: initialState, position: initialPosition, moves} = size == 4 ? generate4x4(100) : generate32x32(30000);
 	let state: number[] = initialState;
 
 	function generate4x4(n: number) {
@@ -51,6 +51,47 @@
 
 		// const result = {state: values, moves, position, goal};
 		// console.log(JSON.stringify(result, null, 2));
+		return result;
+	}
+
+	function generate32x32(n: number) {
+		const size = 32;
+		const goal: number[] = [];
+		for (let i = 0; i < size * size; i++) {
+			goal.push(i + 1);
+		}
+		goal[size * size - 1] = 0;
+
+		const values: number[] = goal.slice(0);
+		let position = size * size - 1;
+
+		const moves = [];
+		for (let i = 0; i < n; i++) {
+			const x = position % size;
+			const y = Math.floor(position / size);
+			const move = Math.floor(Math.random() * 4);
+			let newPosition = position;
+			if (move == 0 && x < size - 1) {
+				newPosition = y * size + x + 1;
+			} else if (move == 1 && y < size - 1) {
+				newPosition = (y + 1) * size + x;
+			} else if (move == 2 && x > 0) {
+				newPosition = y * size + x - 1;
+			} else if (move == 3 && y > 0) {
+				newPosition = (y - 1) * size + x;
+			}
+
+			if (newPosition != position) {
+				const tmp = values[newPosition];
+				values[newPosition] = values[position];
+				values[position] = tmp;
+				position = newPosition;
+				moves.unshift((move + 2) % 4);
+			}
+		}
+
+		const result = {state: values, moves, position, goal};
+		console.log(JSON.stringify(result, null, 2));
 		return result;
 	}
 
@@ -100,6 +141,8 @@
 	export const puzzle = {
 		async solve() {
 			const frozenMoves = moves.slice(0);
+			const time = 3;
+			let accumulatedTime = 0;
 			for (const move of frozenMoves) {
 				const {x, y, i: position} = emptyCellPosition;
 				let newPosition = position;
@@ -113,16 +156,23 @@
 					newPosition = (y - 1) * size + x;
 				}
 				swap(newPosition, emptyCellPosition.i, move);
-				await wait(0.02);
+				// accumulatedTime += time / frozenMoves.length;
+				// if (accumulatedTime > 1) {
+				// 	accumulatedTime = 0;
+				// 	await wait(1);
+				// }
+				await wait(time / frozenMoves.length);
 			}
 		},
 	};
 
-	function swap(tile: number, empty: number, move: number) {
+	function swap(tile: number, empty: number, move: number, doNotRegisterMove?: boolean) {
 		const tmp = state[tile];
 		state[tile] = state[empty];
 		state[empty] = tmp;
-		moves.unshift((move + 2) % 4);
+		if (!doNotRegisterMove) {
+			moves.unshift((move + 2) % 4);
+		}
 	}
 
 	let BLANK_TILE = 11;
