@@ -9,9 +9,9 @@
 </script>
 
 <!-- Navbar -->
-<div class="navbar bg-gray-800 text-white">
-	<div class="navbar-start">
-		<span class="normal-case text-xl">Demo</span>
+<div class="navbar bg-purple-900">
+	<div class="navbar-start bg-purple-900">
+		<span class="normal-case text-xl"></span>
 	</div>
 	<div class="navbar-center flex-grow lg:flex lg:justify-center" />
 
@@ -67,6 +67,6 @@
 <!-- </div> -->
 
 <!-- Connection UI -->
-<div class="bg-gray-800 text-white py-4">
+<div class="text-white py-4">
 	<Web3ConnectionUI />
 </div>

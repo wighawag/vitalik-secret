@@ -50,22 +50,6 @@
 	<meta name="apple-mobile-web-app-title" content={name} />
 </svelte:head>
 
-<div class="sticky top-0 z-50 navbar bg-base-100 min-h-0 p-1 border-b-2 border-primary">
-	<div class="flex-1">
-		<NavTabs
-			pages={[
-				{pathname: '/', title: 'Home'},
-				{pathname: '/demo/', title: 'Demo'},
-				{pathname: '/debug/', title: 'Debug'},
-				{pathname: '/about/', title: 'About'},
-			]}
-		/>
-	</div>
-	<div class="flex-none">
-		<ThemeChanger />
-	</div>
-</div>
-
 <!-- Disable native prompt from browsers -->
 <NoInstallPrompt />
 <!-- You can also add your own Install Prompt: -->

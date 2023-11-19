@@ -1,8 +1,7 @@
 {
   "name": "vitalik-secret",
-  "version": "0.0.1",
-  "description": "Template to develop fully decentralised app and games",
-  "private": true,
+  "version": "0.0.7",
+  "description": "✌",
   "type": "module",
   "devDependencies": {
     "ask-env": "^0.0.1",
@@ -18,6 +17,10 @@
     "set-name": "npx change-name@0.3.1 --ask vitalik-secret",
     "template-test": "pnpm --filter ./contracts local_node & pnpm run --filter ./contracts deploy localhost ~~ pnpm export -n localhost --ts ../indexer/src/contracts.ts,../web/src/data/contracts.ts ~~ && pnpm run --filter ./common build && pnpm --filter ./indexer build",
     "sync-deps": "syncpack fix-mismatches && pnpm -r format:fix",
+    "---------------------- ZECRET ✌️ ----------------------": "",
+    "zecret:check": "cd contracts/zecret && nargo check",
+    "zecret:test": "cd contracts/zecret && nargo test --show-output",
+    "zecret:verify": "cd contracts/zecret && nargo prove && nargo verify",
     "---------------------- FORMAT ----------------------": "",
     "format": "prettier --write . && pnpm -r format",
     "format:check": "prettier --check . && pnpm -r format:check",
