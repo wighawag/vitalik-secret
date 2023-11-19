@@ -5,9 +5,6 @@ import "solidity-proxy/solc_0.8/EIP1967/Proxied.sol";
 import "solidity-kit/solc_0.8/ERC721/implementations/BasicERC721.sol";
 import "solidity-kit/solc_0.8/ERC721/interfaces/IERC721Metadata.sol";
 import {UltraVerifier} from "../zecret/contract/zecret/plonk_vk.sol";
-
-// DEBUG
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice a puzzle
@@ -29,12 +26,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
     uint256 public lowestNumberOfMoves;
 
-    function randomSeed() internal view returns (uint256) {
-        //TODO from future block hash
-        return 42;
-    }
-
-    function initialState() public view returns (uint8[SIZE * SIZE] memory) {
+    function randomState() public view returns (uint8[SIZE * SIZE] memory) {
         uint8[SIZE * SIZE] memory state;
         uint256 randomBoardSize = state.length - 1;
         state[randomBoardSize] = 0;
@@ -90,8 +82,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         bytes32[] memory publicInputs = new bytes32[](2);
         publicInputs[0] = bytes32(numMoves);
         publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
-        console.log(bytes32ToHexString(publicInputs[0]));
-        console.log(bytes32ToHexString(publicInputs[1]));
         require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
         lowestNumberOfMoves = numMoves;
         _safeMint(msg.sender, numMoves);
@@ -172,8 +162,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     function _swap(uint8[SIZE * SIZE] memory data, uint256 a, uint256 b) internal pure {
         uint8 aValue = data[a];
         uint8 bValue = data[b];
-        console.log(string.concat("a: ", Strings.toString(a), " = ", Strings.toString(aValue)));
-        console.log(string.concat("b: ", Strings.toString(b), " = ", Strings.toString(bValue)));
         data[a] = bValue;
         data[b] = aValue;
     }
@@ -194,5 +182,9 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         }
 
         return string(hexString);
+    }
+
+    function randomSeed() internal view returns (uint256) {
+        return 42;
     }
 }
