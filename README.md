@@ -15,6 +15,21 @@ The person with the best solution gets the prize.
 
 While the project is made with a fun twist, the puzzle is itself an interesting challenge. There are many research papers on the topic and rewarding research with NFT could be an interesting application to this kind of research.
 
+## How it works ?
+
+Proving that you played game correctly presents the challenge of itself. You can prove only limited number of moves in naive Solidity implementation.
+We brielfy considered going with optimistic approach which removes computation cost but had other drawbacks, but we knew we had to stay true to the Vitalik's secret and leverage power of zk moon math.
+We used Noir to write game circut in which solver plays the moves and generates proof of number moves needed to finish the game.
+When you verify the proof in smart contract that surpasses best score, unique NFT is minted to you as reward.
+During your rein as best solver it features special effect.
+
+Technologies used:
+
+- Noir for snark circuits
+- Solidity for smart contract code
+- DAPP is build with power of JollyRodger ☠️ stack
+- Viem is used for network communication
+
 ## How to use?
 
 We are assuming here that you already setup your env as specified in the [initial setup section](#initial-setup)
