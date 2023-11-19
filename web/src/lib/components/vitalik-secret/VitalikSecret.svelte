@@ -307,5 +307,5 @@
 		/>
 	{/each}
 
-	<rect x={emptyCellPosition.x} y={emptyCellPosition.y} width="1" height="1" rx="0" style="fill: red;" />
+	<rect x={emptyCellPosition.x} y={emptyCellPosition.y} width="1" height="1" rx="0" style="fill: rgb(234 179 8);" />
 </svg>
