@@ -2,6 +2,9 @@
 	export let solution: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
 	export let size: number = 4;
 
+	let clazz: string = '';
+	export {clazz as class};
+
 	const {state: initialState, position: initialPosition, moves} = generate4x4(100);
 	let state: number[] = initialState;
 
@@ -222,7 +225,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<svg on:click={click} xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`}>
+<svg class={clazz} on:click={click} xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`}>
 	<defs>
 		<!-- we define the image as #v-->
 		<image width={size} height={size} id="v" href="/images/vitalik-secret.jpeg"></image>
