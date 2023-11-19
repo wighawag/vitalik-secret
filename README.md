@@ -1,6 +1,19 @@
-# Vitalik-Secret
+# Vitalik's Secret
 
-A template to develop decentralised applications
+<p align="center">
+  <a href="https://vitalik-secret.vercel.app">
+    <img src="docs/public/screenshot32x32.png" alt="Vitalik's Secret Logo" width="500">
+  </a>
+</p>
+
+A world scale puzzle that challenge anyone to find the best solution. It is a NP-hard problem so rife for exploration
+
+## What is it ?
+
+This project is a world-scale puzzle that lets anyone try to solve it in the minimum moves. Even as creators, we don't have any more clues. A fully permissionless puzzle
+The person with the best solution gets the prize.
+
+While the project is made with a fun twist, the puzzle is itself an interesting challenge. There are many research papers on the topic and rewarding research with NFT could be an interesting application to this kind of research.
 
 ## How to use?
 
