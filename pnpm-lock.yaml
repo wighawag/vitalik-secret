@@ -100,8 +100,8 @@ importers:
         specifier: ^0.3.11
         version: 0.3.11
       solidity-proxy:
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.4
+        version: 0.2.4
       tsx:
         specifier: ^4.1.3
         version: 4.1.3
@@ -6991,7 +6991,7 @@ packages:
       named-logs: 0.2.2
       rocketh: 0.6.20(typescript@5.2.2)
       rocketh-deploy: 0.6.22(rocketh@0.6.20)(typescript@5.2.2)
-      solidity-proxy: 0.2.3
+      solidity-proxy: 0.2.4
       viem: 1.19.0(typescript@5.2.2)
     transitivePeerDependencies:
       - bufferutil
@@ -7439,8 +7439,8 @@ packages:
     resolution: {integrity: sha512-HzbnP+l/asjLjD220Pw51ZXgPyPIPs80sBw8OJB/OCy2r/QNWNPXh9G3tHLYdOJ5rBUFXlfpgnfKbEeXOdPSnw==}
     dev: true
 
-  /solidity-proxy@0.2.3:
-    resolution: {integrity: sha512-E+fnz6gqQHEbiGhG235VClgpm6YyWnGi9pMR2bjt7beIU4q6EQdplGO1qZMCFs6rsyHVQF/WAIK1pGhR0PDhHg==}
+  /solidity-proxy@0.2.4:
+    resolution: {integrity: sha512-wmCC66rfTFqnZd3RjNlSt2cSRanIVAAhiSWup7bIfRGZL4j7P4joHUEAZRixkOABrA0kOt6HlCFfPnNz/9Z91w==}
     dev: true
 
   /sorcery@0.11.0:
