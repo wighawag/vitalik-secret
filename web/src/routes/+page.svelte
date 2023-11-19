@@ -5,6 +5,7 @@
 	import VitalikSecret from '$lib/components/vitalik-secret/VitalikSecret.svelte';
 
 	let puzzle: {solve(): Promise<void>};
+	let solved: boolean;
 </script>
 
 <!-- Navbar -->
@@ -24,6 +25,7 @@
 	<VitalikSecret
 		class="w-full max-w-xs lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl border-4 border-white rounded-lg"
 		bind:puzzle
+		bind:solved
 	/>
 	<div class="flex justify-center gap-2 bg-purple-900 p-8">
 		<button
@@ -34,9 +36,10 @@
 		</button>
 
 		<button
+			disabled={!solved}
 			on:click={() =>
 				contracts.execute(async ({contracts, connection}) => {
-					// Transaction logic...
+					contracts.VitalikSecret.write.proposeSolutionProof([78n, '0x']);
 				})}
 			class="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
 		>

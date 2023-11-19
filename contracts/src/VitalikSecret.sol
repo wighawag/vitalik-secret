@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice a puzzle
 contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
-
     UltraVerifier zecret;
 
     enum Move {
@@ -73,7 +72,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             require(state[i] == i, "invalid solution 2/2");
         }
 
-        require(lowestNumberOfMoves == 0 || moves.length < lowestNumberOfMoves, "TOO_MANY_MOVES");
+        require(lowestNumberOfMoves == 0 || moves.length < lowestNumberOfMoves, "MAKE_BETTER_MOVE");
         lowestNumberOfMoves = moves.length;
         _safeMint(msg.sender, moves.length);
     }
@@ -82,7 +81,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         bytes32[] memory publicInputs = new bytes32[](2);
         publicInputs[0] = bytes32(numMoves);
         publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
-        require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
+        require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "MAKE_BETTER_MOVE");
         lowestNumberOfMoves = numMoves;
         _safeMint(msg.sender, numMoves);
     }

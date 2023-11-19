@@ -1,11 +1,12 @@
 <script lang="ts">
 	export let solution: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
 	export let size: number = 4;
+	export let solved: boolean = false;
 
 	let clazz: string = '';
 	export {clazz as class};
 
-	const {state: initialState, position: initialPosition, moves} = size == 4 ? generate4x4(100) : generate(size);
+	const {state: initialState, position: initialPosition, moves, goal} = size == 4 ? generate4x4(100) : generate(size);
 	let state: number[] = initialState;
 
 	function generate4x4(n: number) {
@@ -173,6 +174,8 @@
 		if (!doNotRegisterMove) {
 			moves.unshift((move + 2) % 4);
 		}
+
+		solved = goal.join(',') == state.join(',');
 	}
 
 	let BLANK_TILE = 11;
