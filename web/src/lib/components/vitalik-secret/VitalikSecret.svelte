@@ -6,8 +6,9 @@
 	let state: number[] = initialState;
 
 	function generate4x4(n: number) {
+		const goal = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
 		const size = 4;
-		const values: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11, 12, 13, 14, 15];
+		const values: number[] = goal;
 		let position = 10;
 
 		const moves = [];
@@ -35,7 +36,9 @@
 			}
 		}
 
-		return {state: values, moves, position};
+		const result = {state: values, moves, position, goal};
+		console.log(JSON.stringify(result, null, 2));
+		return result;
 	}
 
 	function match(): boolean {
