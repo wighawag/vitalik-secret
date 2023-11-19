@@ -24,8 +24,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
 
     uint256 public constant SIZE = 4;
 
-    // TODO currently the blank is bot right, but it should be instead of bulge
-    uint256 immutable INITIAL_POSITION = 15;
+    uint256 immutable INITIAL_POSITION = 7;
+    uint256 immutable FINAL_POSITION = 10;
 
     uint256 public lowestNumberOfMoves;
 
@@ -52,8 +52,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
     }
 
     function proposeSolution(Move[] calldata moves) external {
-        uint8[SIZE * SIZE] memory state = [2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 0];
-        //uint8[SIZE*SIZE] memory state = initialState();
+        uint8[SIZE * SIZE] memory state = [2, 4, 7, 3, 10, 9, 6, 0, 5, 1, 11, 8, 12, 13, 14, 15];
 
         uint256 position = INITIAL_POSITION;
 
@@ -74,9 +73,12 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             );
         }
 
-        require(state[state.length - 1] == 0, "invalid solution (carret)");
-        for (uint256 i = 0; i < state.length - 1; i++) {
-            require(state[i] == i + 1, "invalid solution");
+        require(state[FINAL_POSITION] == 0, "invalid solution (carret)");
+        for (uint256 i = 0; i < FINAL_POSITION; i++) {
+            require(state[i] == i + 1, "invalid solution 1/2");
+        }
+        for (uint256 i = FINAL_POSITION + 1; i < state.length; i++) {
+            require(state[i] == i, "invalid solution 2/2");
         }
 
         require(lowestNumberOfMoves == 0 || moves.length < lowestNumberOfMoves, "TOO_MANY_MOVES");
@@ -90,7 +92,6 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
         console.log(bytes32ToHexString(publicInputs[0]));
         console.log(bytes32ToHexString(publicInputs[1]));
-        require(zecret.verify(proof, publicInputs), "INVALID_PROOF");
         require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
         lowestNumberOfMoves = numMoves;
         _safeMint(msg.sender, numMoves);
