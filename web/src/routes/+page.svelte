@@ -3,9 +3,11 @@
 	import Web3ConnectionUI from '$lib/web3/Web3ConnectionUI.svelte';
 	import {account, connection, network, contracts} from '$lib/web3';
 	import VitalikSecret from '$lib/components/vitalik-secret/VitalikSecret.svelte';
+	import {params} from '$lib/config';
 
 	let puzzle: {solve(): Promise<void>};
 	let solved: boolean;
+	let size = params['size'] ? parseInt(params['size']) : 4;
 </script>
 
 <!-- Navbar -->
@@ -26,6 +28,7 @@
 		class="w-full max-w-xs lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl border-4 border-white rounded-lg"
 		bind:puzzle
 		bind:solved
+		{size}
 	/>
 	<div class="flex justify-center gap-2 bg-purple-900 p-8">
 		<button
