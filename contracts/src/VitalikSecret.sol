@@ -88,6 +88,8 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         bytes32[] memory publicInputs = new bytes32[](2);
         publicInputs[0] = bytes32(numMoves);
         publicInputs[1] = bytes32(uint256(uint160(msg.sender)));
+        console.log(bytes32ToHexString(publicInputs[0]));
+        console.log(bytes32ToHexString(publicInputs[1]));
         require(zecret.verify(proof, publicInputs), "INVALID_PROOF");
         require(lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves, "TOO_MANY_MOVES");
         lowestNumberOfMoves = numMoves;
@@ -150,6 +152,7 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
             );
     }
 
+    // TODO remove
     function testMint(uint256 numMoves) external {
         if (lowestNumberOfMoves == 0 || numMoves < lowestNumberOfMoves) {
             lowestNumberOfMoves = numMoves;
@@ -172,5 +175,23 @@ contract VitalikSecret is BasicERC721, IERC721Metadata, Proxied {
         console.log(string.concat("b: ", Strings.toString(b), " = ", Strings.toString(bValue)));
         data[a] = bValue;
         data[b] = aValue;
+    }
+
+    function bytes32ToHexString(bytes32 _bytes32) public pure returns (string memory) {
+        // Convert bytes32 to bytes memory
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i = 0; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
+        }
+
+        // Convert bytes to hex string
+        bytes memory hexChars = "0123456789abcdef";
+        bytes memory hexString = new bytes(64);
+        for (uint256 j = 0; j < 32; j++) {
+            hexString[j * 2] = hexChars[uint8(bytesArray[j] >> 4)];
+            hexString[j * 2 + 1] = hexChars[uint8(bytesArray[j] & 0x0f)];
+        }
+
+        return string(hexString);
     }
 }
