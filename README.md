@@ -25,10 +25,10 @@ During your rein as best solver it features special effect.
 
 Technologies used:
 
-- Noir for snark circuits
-- Solidity for smart contract code
-- DAPP is build with power of JollyRodger ☠️ stack
-- Viem is used for network communication
+- [Noir](https://noir-lang.org/) for snark circuits
+- [Solidity](https://soliditylang.org/) for smart contract code
+- DAPP is build with power of [Jolly Roger ☠️](https://jolly-roger.eth.limo) stack
+- [Viem](https://viem.sh/) is used for network communication
 
 ## How to use?
 
