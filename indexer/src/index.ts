@@ -1,34 +1,40 @@
 import {MergedAbis, JSProcessor, fromJSProcessor} from 'ethereum-indexer-js-processor';
 import contractsInfo from './contracts';
 
-// you declare the types for your in-browswe DB.
-export type Data = {
-	greetings: {account: `0x${string}`; message: string}[];
-};
+import type {Data, Trophy} from './types';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const VitalikSecretIndexerProcessor: JSProcessor<MergedAbis<typeof contractsInfo.contracts>, Data> = {
 	// version is automatically populated via version.cjs to let the browser knows to reindex on changes
 	version: '__VERSION_HASH__',
 	construct(): Data {
 		// you return here the starting state, here an empty array for the greetings
-		return {greetings: []};
+		return {owners: [], trophies: []};
 	},
-	onMessageChanged(state, event) {
-		// we lookup existing message from this user:
-		const findIndex = state.greetings.findIndex((v) => v.account === event.args.user);
+	onTransfer(data, event) {
+		const to = event.args.to;
 
-		// the message is one of the args of the event object (automatically populated and typed! from the abi)
-		const message = event.args.message;
+		const tokenID = event.args.tokenID.toString();
 
-		if (findIndex === -1) {
-			// if none message exists from that user we push a new entry
-			state.greetings.push({
-				account: event.args.user,
-				message: message,
-			});
+		let trophy: Trophy | undefined;
+		let index = data.trophies.findIndex((v) => v.tokenID === tokenID);
+		if (index !== -1) {
+			trophy = data.trophies[index];
+		}
+
+		if (!trophy) {
+			trophy = {
+				tokenID,
+				owner: to,
+			};
+			data.trophies.push(trophy);
 		} else {
-			// else we edit the message
-			state.greetings[findIndex].message = message;
+			if (to === ZERO_ADDRESS) {
+				data.trophies.splice(index, 1);
+				return;
+			} else {
+				trophy.owner = to;
+			}
 		}
 	},
 };
