@@ -21,7 +21,7 @@
     "rocketh-verifier": "^0.6.24",
     "set-defaults": "^0.0.2",
     "solidity-coverage": "^0.8.5",
-    "solidity-kit": "^0.3.11",
+    "solidity-kit": "^0.3.13",
     "solidity-proxy": "^0.2.4",
     "tsx": "^4.1.3",
     "typescript": "^5.2.2",

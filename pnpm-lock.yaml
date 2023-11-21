@@ -97,8 +97,8 @@ importers:
         specifier: ^0.8.5
         version: 0.8.5(hardhat@2.19.0)
       solidity-kit:
-        specifier: ^0.3.11
-        version: 0.3.11
+        specifier: ^0.3.13
+        version: 0.3.13
       solidity-proxy:
         specifier: ^0.2.4
         version: 0.2.4
@@ -1762,7 +1762,7 @@ packages:
   /@types/chai-as-promised@7.1.8:
     resolution: {integrity: sha512-ThlRVIJhr69FLlh6IctTXFkmhtP3NpMZ2QGq69StYLyKZFp/HOp1VdKZj7RvfNWYYcJ1xlbLGLLWj1UvP5u/Gw==}
     dependencies:
-      '@types/chai': 4.3.10
+      '@types/chai': 4.3.11
     dev: true
 
   /@types/chai-subset@1.3.5:
@@ -1773,6 +1773,10 @@ packages:
 
   /@types/chai@4.3.10:
     resolution: {integrity: sha512-of+ICnbqjmFCiixUnqRulbylyXQrPqIGf/B3Jax1wIF3DvSheysQxAWvqHhZiW3IQrycvokcLcFQlveGp+vyNg==}
+    dev: true
+
+  /@types/chai@4.3.11:
+    resolution: {integrity: sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==}
     dev: true
 
   /@types/cookie@0.5.4:
@@ -7435,8 +7439,8 @@ packages:
       - supports-color
     dev: true
 
-  /solidity-kit@0.3.11:
-    resolution: {integrity: sha512-HzbnP+l/asjLjD220Pw51ZXgPyPIPs80sBw8OJB/OCy2r/QNWNPXh9G3tHLYdOJ5rBUFXlfpgnfKbEeXOdPSnw==}
+  /solidity-kit@0.3.13:
+    resolution: {integrity: sha512-40S033ZIcF0Ijc/BqvJXdPOSwTOzrgU5jgV7Rf+dhfu1Qnka4Ywry2fc0M3jmvnn6CGjqPXBc00KCCDdPumXQg==}
     dev: true
 
   /solidity-proxy@0.2.4:
